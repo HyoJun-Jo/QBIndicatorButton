@@ -236,21 +236,11 @@ open class QBIndicatorButton: UIButton {
         self.isUserInteractionEnabled = false
         self.isLoading = true
 
-        UIView.animate(withDuration: animatedScaleDuration) {
-            self.transform = CGAffineTransform(scaleX: self.animatedScale, y: self.animatedScale)
-        } completion: { _ in
-            UIView.animate(withDuration: self.animatedScaleDuration) {
-                self.transform = CGAffineTransform.identity
-            } completion: { _ in
-                UIView.transition(with: self, duration: self.titleFadeDuration, options: .curveEaseOut) {
-                    self.alpha = 0.96
-                    self.titleLabel?.alpha = self.indicatorPosition == .center ? 0.0 : 0.6
-                } completion: { _ in
-                    self.showIndicator()
-                    completion?()
-                }
-            }
-        }
+        self.titleLabel?.alpha = 0.0
+
+        self.showIndicator()
+        completion?()
+        
     }
 
     /// Hide activity indicator inside the button
@@ -261,21 +251,12 @@ open class QBIndicatorButton: UIButton {
         self.isUserInteractionEnabled = true
         self.isLoading = false
 
-        UIView.animate(withDuration: 0.2) {
-            self.indicator.alpha = 0
-        } completion: { _ in
-            self.indicator.isAnimating = false
-            self.indicator.removeFromSuperview()
-        }
+        self.indicator.alpha = 0
+        self.indicator.isAnimating = false
+        self.indicator.removeFromSuperview()
 
-        UIView.transition(with: self,
-                          duration: self.titleFadeDuration,
-                          options: .curveEaseOut) {
-            self.alpha = 1.0
-            self.titleLabel?.alpha = 1.0
-        } completion: { _ in
-            completion?()
-        }
+        self.titleLabel?.alpha = 1.0
+        completion?()
     }
 
     private func showIndicator() {
